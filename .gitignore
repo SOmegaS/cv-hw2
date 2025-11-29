@@ -4,57 +4,25 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual Environment
 venv/
-ENV/
 env/
+*.egg-info/
+dist/
+build/
 
-# Data
-data/coco/train2017/
-data/coco/val2017/
-data/coco/test2017/
-data/coco/annotations/
-data/synthetic/
-*.jpg
-*.png
-*.jpeg
-*.zip
+# Data (too large for Git)
+data/
 
-# Outputs
+# Model outputs (too large for Git)
 outputs/
-checkpoints/*.pt
-*.pt
-*.pth
-*.ckpt
 
 # Logs
-logs/
 *.log
+
+# TensorBoard
 events.out.tfevents.*
-quick_start*.log
-test_*.log
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
@@ -65,18 +33,9 @@ test_*.log
 .DS_Store
 Thumbs.db
 
-# TensorBoard
-runs/
-profiler/
+# Jupyter
+.ipynb_checkpoints/
 
-# Visualizations (except examples)
-visualizations/predictions/*
-visualizations/error_analysis/*
-visualizations/*.png
-!visualizations/example_*.png
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
-
+# Temporary
+*_temp*
+test_*

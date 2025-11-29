@@ -1,16 +1,12 @@
 """
-Synthetic Data Generation using Stable Diffusion + ControlNet
+Synthetic Data Generation using Stable Diffusion
+Simplified version - text-to-image without ControlNet for faster generation
 """
 import argparse
 import json
 from pathlib import Path
 import torch
-from diffusers import (
-    StableDiffusionControlNetPipeline,
-    ControlNetModel,
-    UniPCMultistepScheduler
-)
-from controlnet_aux import OpenposeDetector
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 from PIL import Image
 import numpy as np
 from tqdm import tqdm
@@ -20,34 +16,26 @@ import random
 class SyntheticDataGenerator:
     def __init__(
         self,
-        model_id="runwayml/stable-diffusion-v1-5",
-        controlnet_id="lllyasviel/sd-controlnet-openpose",
+        model_id="stabilityai/stable-diffusion-2-1-base",
         device="cuda"
     ):
         self.device = device
         
-        print(f"Loading ControlNet from {controlnet_id}...")
-        controlnet = ControlNetModel.from_pretrained(
-            controlnet_id,
-            torch_dtype=torch.float16
-        )
-        
         print(f"Loading Stable Diffusion from {model_id}...")
-        self.pipe = StableDiffusionControlNetPipeline.from_pretrained(
+        print("⚠️  Первая загрузка займет время (~5GB модель)")
+        
+        self.pipe = StableDiffusionPipeline.from_pretrained(
             model_id,
-            controlnet=controlnet,
             torch_dtype=torch.float16,
             safety_checker=None
-        )
+        ).to(device)
         
-        self.pipe.scheduler = UniPCMultistepScheduler.from_config(
+        # Faster scheduler
+        self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(
             self.pipe.scheduler.config
         )
-        self.pipe.enable_model_cpu_offload()
-        self.pipe.enable_xformers_memory_efficient_attention()
         
-        print("Loading pose detector...")
-        self.pose_detector = OpenposeDetector.from_pretrained('lllyasviel/ControlNet')
+        print("✅ Model loaded successfully!")
     
     def generate_from_pose(
         self,
@@ -230,14 +218,17 @@ class SyntheticDataGenerator:
                 pass
             
             # Generate using standard text-to-image
-            image = self.pipe.text2img(
+            seed = random.randint(0, 1000000)
+            generator = torch.Generator(device=self.device).manual_seed(seed)
+            
+            image = self.pipe(
                 prompt=prompt,
-                negative_prompt="low quality, blurry, distorted, deformed",
-                num_inference_steps=30,
+                negative_prompt="low quality, blurry, distorted, deformed, text, watermark",
+                num_inference_steps=25,  # Faster
                 guidance_scale=7.5,
                 width=512,
                 height=512,
-                generator=torch.Generator(device=self.device).manual_seed(random.randint(0, 1000000))
+                generator=generator
             ).images[0]
             
             images.append(image)
@@ -261,29 +252,36 @@ class SyntheticDataGenerator:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate synthetic data')
+    parser = argparse.ArgumentParser(description='Generate synthetic data using Stable Diffusion')
     parser.add_argument('--output_dir', type=str, required=True,
                         help='Output directory for generated images')
     parser.add_argument('--classes', nargs='+', 
-                        default=['person', 'dog', 'cat'],
+                        default=['dog', 'cat', 'train', 'airplane'],
                         help='Classes to generate (rare classes)')
-    parser.add_argument('--num_samples', type=int, default=50,
+    parser.add_argument('--num_samples', type=int, default=100,
                         help='Number of samples per class')
     parser.add_argument('--model_id', type=str, 
-                        default='runwayml/stable-diffusion-v1-5',
+                        default='stabilityai/stable-diffusion-2-1-base',
                         help='Stable Diffusion model ID')
-    parser.add_argument('--controlnet_id', type=str,
-                        default='lllyasviel/sd-controlnet-openpose',
-                        help='ControlNet model ID')
+    parser.add_argument('--batch_size', type=int, default=1,
+                        help='Batch size for generation (keep at 1 for stability)')
     parser.add_argument('--device', type=str, default='cuda',
                         help='Device to use')
     
     args = parser.parse_args()
     
+    print("\n" + "="*60)
+    print("  SYNTHETIC DATA GENERATION")
+    print("="*60)
+    print(f"\nClasses: {', '.join(args.classes)}")
+    print(f"Samples per class: {args.num_samples}")
+    print(f"Total images: {len(args.classes) * args.num_samples}")
+    print(f"Model: {args.model_id}")
+    print("\n" + "="*60 + "\n")
+    
     # Create generator
     generator = SyntheticDataGenerator(
         model_id=args.model_id,
-        controlnet_id=args.controlnet_id,
         device=args.device
     )
     
