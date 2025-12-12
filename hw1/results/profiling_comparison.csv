@@ -1,0 +1,3 @@
+model_name,total_params,trainable_params,trace_path,throughput_images_per_sec,latency_ms_per_batch,total_time_sec,total_images,memory_before_mb,memory_after_mb,peak_memory_mb,memory_used_mb,approx_flops
+cnn,2471941,2471941,runs/profiler/cnn/cnn_trace.json,11059.19662500103,11.574077606201172,0.5787038803100586,6400,48.9931640625,48.99560546875,112.9931640625,0.00244140625,4943882
+vit,5525381,965,runs/profiler/vit/vit_trace.json,1742.2479298935189,36.73415184020996,1.836707592010498,3200,97.51611328125,97.517578125,209.09423828125,0.00146484375,11050762

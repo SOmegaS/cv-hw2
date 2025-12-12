@@ -1,0 +1,145 @@
+2025-12-11 16:59:52,571 - INFO - ============================================================
+2025-12-11 16:59:52,571 - INFO - Profiling CNN and ViT-Tiny models
+2025-12-11 16:59:52,571 - INFO - ============================================================
+2025-12-11 16:59:53,750 - INFO - Using CUDA: NVIDIA A100 80GB PCIe
+2025-12-11 16:59:53,750 - INFO - 
+============================================================
+2025-12-11 16:59:53,750 - INFO - Profiling CNN
+2025-12-11 16:59:53,750 - INFO - ============================================================
+
+2025-12-11 16:59:53,751 - INFO - Downloading CIFAR-10 dataset...
+2025-12-11 16:59:55,118 - INFO - Filtering dataset to classes: ['airplane', 'automobile', 'bird', 'cat', 'dog']
+2025-12-11 17:00:07,914 - INFO - Dataset sizes - Train: 20000, Val: 5000, Test: 5000
+2025-12-11 17:00:08,091 - INFO - Loaded CNN weights from checkpoints/cnn_best.pth
+2025-12-11 17:00:08,091 - INFO - 
+============================================================
+2025-12-11 17:00:08,091 - INFO - Comprehensive profiling for cnn
+2025-12-11 17:00:08,091 - INFO - ============================================================
+
+2025-12-11 17:00:08,091 - INFO - Starting profiling for cnn...
+2025-12-11 17:00:08,538 - INFO - 
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg       CPU Mem  Self CPU Mem      CUDA Mem  Self CUDA Mem    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                          ProfilerStep*         0.00%       0.000us         0.00%       0.000us       0.000us       6.404ms       155.62%       6.404ms       1.067ms           0 B           0 B           0 B           0 B             6  
+                                          ProfilerStep*         5.18%       2.551ms        99.97%      49.228ms       8.205ms       0.000us         0.00%       4.115ms     685.862us           0 B           0 B           0 B      -1.08 GB             6  
+                                           aten::conv2d         0.15%      72.666us         3.61%       1.776ms      98.646us       0.000us         0.00%       1.666ms      92.554us           0 B           0 B     336.00 MB           0 B            18  
+                                      aten::convolution         0.28%     136.168us         3.46%       1.703ms      94.609us       0.000us         0.00%       1.666ms      92.554us           0 B           0 B     336.00 MB           0 B            18  
+                                     aten::_convolution         0.43%     212.714us         3.18%       1.567ms      87.044us       0.000us         0.00%       1.666ms      92.554us           0 B           0 B     336.00 MB           0 B            18  
+                                aten::cudnn_convolution         1.32%     650.144us         2.07%       1.017ms      56.518us       1.201ms        29.18%       1.201ms      66.722us           0 B           0 B     336.00 MB     336.00 MB            18  
+                                           aten::linear         0.09%      44.250us         1.19%     585.658us      48.805us       0.000us         0.00%     623.267us      51.939us           0 B           0 B       1.51 MB           0 B            12  
+                                            aten::addmm         0.65%     319.770us         0.89%     436.097us      36.341us     623.267us        15.15%     623.267us      51.939us           0 B           0 B       1.51 MB       1.51 MB            12  
+                        ampere_sgemm_32x32_sliced1x4_tn         0.00%       0.000us         0.00%       0.000us       0.000us     616.868us        14.99%     616.868us      51.406us           0 B           0 B           0 B           0 B            12  
+                                       aten::batch_norm         0.10%      50.016us         1.90%     937.235us      52.069us       0.000us         0.00%     585.060us      32.503us           0 B           0 B     336.00 MB           0 B            18  
+                           aten::_batch_norm_impl_index         0.16%      76.553us         1.80%     887.219us      49.290us       0.000us         0.00%     585.060us      32.503us           0 B           0 B     336.00 MB           0 B            18  
+                                 aten::cudnn_batch_norm         0.76%     371.974us         1.65%     810.666us      45.037us     585.060us        14.22%     585.060us      32.503us           0 B           0 B     336.00 MB           0 B            18  
+void cudnn::bn_fw_inf_1C11_kernel_NCHW<float, float,...         0.00%       0.000us         0.00%       0.000us       0.000us     585.060us        14.22%     585.060us      32.503us           0 B           0 B           0 B           0 B            18  
+                                       aten::max_pool2d         0.15%      75.686us         0.72%     354.223us      19.679us       0.000us         0.00%     488.770us      27.154us           0 B           0 B      84.00 MB    -168.00 MB            18  
+                          aten::max_pool2d_with_indices         0.38%     186.689us         0.57%     278.537us      15.474us     488.770us        11.88%     488.770us      27.154us           0 B           0 B     252.00 MB     252.00 MB            18  
+void at::native::(anonymous namespace)::max_pool_for...         0.00%       0.000us         0.00%       0.000us       0.000us     488.770us        11.88%     488.770us      27.154us           0 B           0 B           0 B           0 B            18  
+                                             aten::add_         0.34%     167.896us         0.54%     265.749us      14.764us     464.964us        11.30%     464.964us      25.831us           0 B           0 B           0 B           0 B            18  
+void at::native::elementwise_kernel<128, 2, at::nati...         0.00%       0.000us         0.00%       0.000us       0.000us     464.964us        11.30%     464.964us      25.831us           0 B           0 B           0 B           0 B            18  
+                                               aten::to         0.11%      51.755us         1.49%     731.824us     121.971us       0.000us         0.00%     385.188us      64.198us           0 B           0 B       9.00 MB           0 B             6  
+                                         aten::_to_copy         0.15%      71.862us         1.38%     680.069us     113.345us       0.000us         0.00%     385.188us      64.198us           0 B           0 B       9.00 MB           0 B             6  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 49.243ms
+Self CUDA time total: 4.115ms
+
+2025-12-11 17:00:08,839 - INFO - Profiling completed. Trace saved to runs/profiler/cnn/cnn_trace.json
+2025-12-11 17:00:08,856 - INFO - Measuring throughput...
+2025-12-11 17:00:09,540 - INFO - Throughput: 11059.20 images/sec
+2025-12-11 17:00:09,540 - INFO - Latency: 11.57 ms/batch
+2025-12-11 17:00:09,581 - INFO - 
+Profiling Summary for cnn:
+2025-12-11 17:00:09,581 - INFO - Total Parameters: 2,471,941
+2025-12-11 17:00:09,581 - INFO - Trainable Parameters: 2,471,941
+2025-12-11 17:00:09,581 - INFO - Throughput: 11059.20 images/sec
+2025-12-11 17:00:09,581 - INFO - Latency: 11.57 ms/batch
+2025-12-11 17:00:09,581 - INFO - Peak Memory: 112.99 MB
+2025-12-11 17:00:09,581 - INFO - 
+============================================================
+2025-12-11 17:00:09,581 - INFO - Profiling ViT-Tiny
+2025-12-11 17:00:09,581 - INFO - ============================================================
+
+2025-12-11 17:00:09,581 - INFO - Downloading CIFAR-10 dataset...
+2025-12-11 17:00:10,903 - INFO - Filtering dataset to classes: ['airplane', 'automobile', 'bird', 'cat', 'dog']
+2025-12-11 17:01:09,858 - INFO - Dataset sizes - Train: 20000, Val: 5000, Test: 5000
+2025-12-11 17:01:09,859 - INFO - Loading pretrained ViT-Tiny from timm...
+2025-12-11 17:01:09,960 - INFO - Loading pretrained weights from Hugging Face hub (timm/vit_tiny_patch16_224.augreg_in21k_ft_in1k)
+2025-12-11 17:01:10,277 - INFO - HTTP Request: HEAD https://huggingface.co/timm/vit_tiny_patch16_224.augreg_in21k_ft_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+2025-12-11 17:01:10,278 - INFO - [timm/vit_tiny_patch16_224.augreg_in21k_ft_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+2025-12-11 17:01:10,289 - INFO - Freezing ViT backbone...
+2025-12-11 17:01:10,290 - INFO - ViT-Tiny linear probe created with 192 features -> 5 classes
+2025-12-11 17:01:10,344 - INFO - Loaded ViT weights from checkpoints/vit_best.pth
+2025-12-11 17:01:10,345 - INFO - 
+============================================================
+2025-12-11 17:01:10,345 - INFO - Comprehensive profiling for vit
+2025-12-11 17:01:10,345 - INFO - ============================================================
+
+2025-12-11 17:01:10,346 - INFO - Starting profiling for vit...
+2025-12-11 17:01:11,723 - INFO - 
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg       CPU Mem  Self CPU Mem      CUDA Mem  Self CUDA Mem    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                          ProfilerStep*         0.00%       0.000us         0.00%       0.000us       0.000us      96.242ms        96.56%      96.242ms      16.040ms           0 B           0 B           0 B           0 B             6  
+                                          ProfilerStep*        11.68%      26.442ms        98.35%     222.729ms      37.122ms       0.000us         0.00%      91.274ms      15.212ms           0 B          -8 B           0 B     -12.22 GB             6  
+                                           aten::linear         1.13%       2.553ms         7.20%      16.316ms      55.497us       0.000us         0.00%      55.542ms     188.919us           0 B           0 B       5.84 GB           0 B           294  
+                                            aten::addmm         3.40%       7.692ms         4.42%      10.012ms      34.056us      55.542ms        55.72%      55.542ms     188.919us           0 B           0 B       5.84 GB       5.84 GB           294  
+                                 ampere_sgemm_32x128_tn         0.00%       0.000us         0.00%       0.000us       0.000us      29.598ms        29.69%      29.598ms     184.988us           0 B           0 B           0 B           0 B           160  
+                                 ampere_sgemm_128x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      17.473ms        17.53%      17.473ms     218.418us           0 B           0 B           0 B           0 B            80  
+                                  ampere_sgemm_64x64_tn         0.00%       0.000us         0.00%       0.000us       0.000us      14.412ms        14.46%      14.412ms     182.426us           0 B           0 B           0 B           0 B            79  
+fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEf...         0.00%       0.000us         0.00%       0.000us       0.000us      13.900ms        13.95%      13.900ms     175.948us           0 B           0 B           0 B           0 B            79  
+                     aten::scaled_dot_product_attention         0.38%     864.301us         2.56%       5.794ms      80.476us       0.000us         0.00%      12.670ms     175.973us           8 B      -1.12 KB     678.66 MB           0 B            72  
+          aten::_scaled_dot_product_efficient_attention         0.35%     785.850us         2.18%       4.930ms      68.472us       0.000us         0.00%      12.670ms     175.973us       1.12 KB           0 B     678.66 MB           0 B            72  
+                     aten::_efficient_attention_forward         0.52%       1.168ms         1.33%       3.002ms      41.692us      12.670ms        12.71%      12.670ms     175.973us       1.12 KB           8 B     678.66 MB           0 B            72  
+                                               aten::to         0.09%     199.302us         4.33%       9.805ms       1.634ms       0.000us         0.00%       9.140ms       1.523ms           0 B           0 B     220.50 MB           0 B             6  
+                                         aten::_to_copy         0.04%      93.820us         4.24%       9.605ms       1.601ms       0.000us         0.00%       9.140ms       1.523ms           0 B           0 B     220.50 MB           0 B             6  
+                                            aten::copy_         0.04%      82.335us         4.16%       9.414ms       1.569ms       9.140ms         9.17%       9.140ms       1.523ms           0 B           0 B           0 B           0 B             6  
+                         Memcpy HtoD (Pinned -> Device)         0.00%       0.000us         0.00%       0.000us       0.000us       9.140ms         9.17%       9.140ms       1.523ms           0 B           0 B           0 B           0 B             6  
+void at::native::(anonymous namespace)::vectorized_l...         0.00%       0.000us         0.00%       0.000us       0.000us       5.616ms         5.63%       5.616ms      33.829us           0 B           0 B           0 B           0 B           166  
+                                       aten::layer_norm         0.46%       1.030ms         3.27%       7.407ms      49.379us       0.000us         0.00%       5.075ms      33.832us           0 B           0 B       1.39 GB     -14.07 MB           150  
+                                aten::native_layer_norm         1.24%       2.818ms         2.82%       6.376ms      42.509us       5.075ms         5.09%       5.075ms      33.832us           0 B           0 B       1.41 GB           0 B           150  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us       3.903ms         3.92%       3.903ms      48.788us           0 B           0 B           0 B           0 B            80  
+                                             aten::gelu         0.39%     873.568us         0.58%       1.313ms      18.242us       3.512ms         3.52%       3.512ms      48.783us           0 B           0 B       2.60 GB       2.56 GB            72  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 226.470ms
+Self CUDA time total: 99.675ms
+
+2025-12-11 17:01:14,348 - INFO - Profiling completed. Trace saved to runs/profiler/vit/vit_trace.json
+2025-12-11 17:01:14,383 - INFO - Measuring throughput...
+2025-12-11 17:01:16,552 - INFO - Throughput: 1742.25 images/sec
+2025-12-11 17:01:16,552 - INFO - Latency: 36.73 ms/batch
+2025-12-11 17:01:16,726 - INFO - 
+Profiling Summary for vit:
+2025-12-11 17:01:16,726 - INFO - Total Parameters: 5,525,381
+2025-12-11 17:01:16,726 - INFO - Trainable Parameters: 965
+2025-12-11 17:01:16,726 - INFO - Throughput: 1742.25 images/sec
+2025-12-11 17:01:16,726 - INFO - Latency: 36.73 ms/batch
+2025-12-11 17:01:16,726 - INFO - Peak Memory: 209.09 MB
+2025-12-11 17:01:16,726 - INFO - 
+============================================================
+2025-12-11 17:01:16,726 - INFO - Saving profiling comparison
+2025-12-11 17:01:16,726 - INFO - ============================================================
+2025-12-11 17:01:16,736 - INFO - Profiling comparison saved to results/profiling_comparison.csv
+2025-12-11 17:01:16,741 - INFO - Profiling comparison saved to results/profiling_comparison.md
+2025-12-11 17:01:16,741 - INFO - 
+============================================================
+2025-12-11 17:01:16,741 - INFO - Profiling completed!
+2025-12-11 17:01:16,741 - INFO - ============================================================
+2025-12-11 17:01:16,741 - INFO - 
+Comparison Summary:
+2025-12-11 17:01:16,741 - INFO - ------------------------------------------------------------
+2025-12-11 17:01:16,741 - INFO - 
+CNN:
+2025-12-11 17:01:16,741 - INFO -   Total params: 2,471,941
+2025-12-11 17:01:16,741 - INFO -   Trainable params: 2,471,941
+2025-12-11 17:01:16,741 - INFO -   Throughput: 11059.20 img/sec
+2025-12-11 17:01:16,741 - INFO -   Latency: 11.57 ms/batch
+2025-12-11 17:01:16,741 - INFO -   Peak memory: 112.99 MB
+2025-12-11 17:01:16,741 - INFO - 
+VIT:
+2025-12-11 17:01:16,741 - INFO -   Total params: 5,525,381
+2025-12-11 17:01:16,741 - INFO -   Trainable params: 965
+2025-12-11 17:01:16,741 - INFO -   Throughput: 1742.25 img/sec
+2025-12-11 17:01:16,741 - INFO -   Latency: 36.73 ms/batch
+2025-12-11 17:01:16,741 - INFO -   Peak memory: 209.09 MB

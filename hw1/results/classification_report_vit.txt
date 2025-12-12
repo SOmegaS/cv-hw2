@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+    airplane     0.8773    0.8650    0.8711      1000
+  automobile     0.9512    0.9160    0.9333      1000
+        bird     0.8372    0.7970    0.8166      1000
+         cat     0.8163    0.8090    0.8127      1000
+         dog     0.8096    0.8970    0.8510      1000
+
+    accuracy                         0.8568      5000
+   macro avg     0.8583    0.8568    0.8569      5000
+weighted avg     0.8583    0.8568    0.8569      5000
